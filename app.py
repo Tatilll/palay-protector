@@ -14,42 +14,63 @@ import pandas as pd
 
 import streamlit as st
 
-# Make layout responsive
-st.set_page_config(page_title="Palay Protector", layout="wide")
-
-# Custom CSS for mobile responsiveness
 st.markdown("""
-    <style>
-    /* Make app container adjust on mobile */
-    [data-testid="stAppViewContainer"] {
-        padding: 1rem;
-        max-width: 100%;
-        overflow-x: hidden;
+<style>
+/* Make entire app responsive */
+[data-testid="stAppViewContainer"] {
+    padding: 0.5rem !important;
+    overflow-x: hidden !important;
+}
+
+/* Force widgets and cards to be full width on mobile */
+.stButton button,
+.stFileUploader,
+.stTextInput input,
+div[data-testid="stVerticalBlock"] > div {
+    width: 100% !important;
+}
+
+/* Reduce excessive height and spacing */
+button {
+    padding: 0.5rem 0.8rem !important;
+    font-size: 1rem !important;
+}
+
+/* Make all images scale nicely */
+img {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/* Center text and icons */
+.stMarkdown, .stButton, .stImage {
+    text-align: center !important;
+}
+
+/* Specific tweaks for small screens */
+@media (max-width: 768px) {
+    .block-container {
+        padding: 0.5rem !important;
     }
 
-    /* Force widgets to fit mobile screens */
-    .stButton button, .stFileUploader, .stTextInput input {
-        width: 100% !important;
+    .stButton button {
+        display: block !important;
+        margin: 0.3rem auto !important;
     }
 
-    /* Fix images */
-    img {
-        max-width: 100%;
-        height: auto;
+    /* Make icons and text in cards smaller */
+    svg, img {
+        width: 60px !important;
+        height: 60px !important;
     }
 
-    /* Reduce padding for small screens */
-    @media (max-width: 768px) {
-        .block-container {
-            padding: 1rem 0.5rem !important;
-        }
-        .stButton button {
-            font-size: 16px !important;
-            padding: 0.6rem !important;
-        }
+    p, h1, h2, h3, h4 {
+        font-size: 0.9rem !important;
     }
-    </style>
+}
+</style>
 """, unsafe_allow_html=True)
+
 
 
 # ========== HELPER FUNCTIONS ==========
