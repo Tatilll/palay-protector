@@ -12,6 +12,46 @@ import io
 from inference_sdk import InferenceHTTPClient
 import pandas as pd
 
+import streamlit as st
+
+# Make layout responsive
+st.set_page_config(page_title="Palay Protector", layout="wide")
+
+# Custom CSS for mobile responsiveness
+st.markdown("""
+    <style>
+    /* Make app container adjust on mobile */
+    [data-testid="stAppViewContainer"] {
+        padding: 1rem;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    /* Force widgets to fit mobile screens */
+    .stButton button, .stFileUploader, .stTextInput input {
+        width: 100% !important;
+    }
+
+    /* Fix images */
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Reduce padding for small screens */
+    @media (max-width: 768px) {
+        .block-container {
+            padding: 1rem 0.5rem !important;
+        }
+        .stButton button {
+            font-size: 16px !important;
+            padding: 0.6rem !important;
+        }
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+
 # ========== HELPER FUNCTIONS ==========
 def generate_otp(length=6):
     """Generate a random OTP"""
@@ -2483,7 +2523,7 @@ elif st.session_state.page == "history":
 
     show_bottom_nav('history')
 
-# ========== ENHANCED DISEASE LIBRARY ==========
+# ========== DISEASE LIBRARY ==========
 elif st.session_state.page == "library":
     
     
