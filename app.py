@@ -612,130 +612,115 @@ elif st.session_state.page == "home":
         st.session_state.page = "admin_dashboard"
         st.rerun()
 
-    # ---------- CSS FOR STYLING ----------
+    # ========== STYLES ==========
     st.markdown("""
     <style>
-    /* Center title */
-    .welcome-header {
-        text-align: center;
-        color: #2e7d32;
-        font-size: 26px;
-        font-weight: bold;
-        margin-bottom: 25px;
-    }
-
-    /* Feature cards */
-    .feature-card {
-        background-color: #A8E6A1;
-        border-radius: 15px;
-        padding: 12px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        border-left: 5px solid #4CAF50;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        transition: transform 0.2s ease;
-    }
-    .feature-card:hover {
-        transform: scale(1.02);
-    }
-
-    /* Weather layout */
-    .weather-section {
-        margin-bottom: 40px;
-    }
-    .weather-header {
-        font-size: 20px;
-        font-weight: bold;
-        color: #2e7d32;
-        margin-bottom: 15px;
-        text-align: center;
-    }
-    .forecast-box {
-        background: #ffffff;
-        border: 1px solid #e0e0e0;
-        border-radius: 12px;
-        padding: 10px;
-        text-align: center;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        transition: transform 0.2s ease;
-    }
-    .forecast-box:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.12);
-    }
-    .forecast-day {
-        font-weight: bold;
-        color: #1b5e20;
-        margin-bottom: 6px;
-        font-size: 14px;
-    }
-    .forecast-icon {
-        width: 40px;
-        height: 40px;
-        margin-bottom: 5px;
-    }
-    .forecast-temp {
-        font-size: 13px;
-        font-weight: bold;
-        color: #333;
-    }
-    .temp-high { color: #ff5722; }
-    .temp-low { color: #2196f3; }
-
-    /* Tips section */
-    .tips-section {
-        background: #f8f9fa;
-        border-radius: 12px;
-        padding: 15px;
-        margin: 20px 0;
-        border-left: 4px solid #4CAF50;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-    .tips-title {
-        font-size: 18px;
-        font-weight: bold;
-        color: #2e7d32;
-        margin-bottom: 10px;
-    }
-    .tips-text {
-        font-size: 14px;
-        color: #555;
-        line-height: 1.5;
-    }
-
-    /* ========== MOBILE OPTIMIZATION ========== */
-    @media (max-width: 768px) {
-        .welcome-header { font-size: 22px; margin-bottom: 15px; }
+        .welcome-header {
+            text-align: center;
+            color: #2e7d32;
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
         .feature-card {
-            padding: 10px;
-            margin-bottom: 10px;
+            background-color: #A8E6A1;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-left: 5px solid #4CAF50;
+            height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
-        .feature-card img {
-            width: 55px !important;
-            height: auto !important;
+        .weather-header {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 15px;
+            text-align: center;
         }
-        .weather-header { font-size: 18px; margin-bottom: 10px; }
+        /* Scrollable weather forecast */
+        .weather-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 12px;
+            padding: 10px 0;
+            scroll-behavior: smooth;
+        }
         .forecast-box {
-            padding: 8px;
-            margin: 4px auto;
-            width: 85%;
+            flex: 0 0 120px;
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 12px;
+            text-align: center;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease;
+        }
+        .forecast-box:hover {
+            transform: translateY(-4px);
+        }
+        .forecast-day {
+            font-weight: bold;
+            color: #1b5e20;
+            margin-bottom: 6px;
+            font-size: 15px;
         }
         .forecast-icon {
-            width: 30px;
-            height: 30px;
+            width: 50px;
+            height: 50px;
+            margin-bottom: 6px;
+        }
+        .forecast-temp {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .temp-high { color: #ff5722; }
+        .temp-low { color: #2196f3; }
+        ::-webkit-scrollbar {
+            height: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #a5d6a7;
+            border-radius: 10px;
         }
         .tips-section {
-            padding: 12px;
-            margin: 15px 0;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #4CAF50;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
-    }
+        .tips-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+        .tips-text {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .feature-card {
+                height: 150px;
+                padding: 10px;
+            }
+            .forecast-box {
+                flex: 0 0 100px;
+                padding: 8px;
+            }
+        }
     </style>
     """, unsafe_allow_html=True)
 
-    # ---------- WELCOME HEADER ----------
+    # ========== HEADER ==========
     st.markdown(
         f"""<div class="welcome-header">
             Welcome back, <span style="color: #4CAF50;">{st.session_state.logged_user}</span>!
@@ -746,8 +731,9 @@ elif st.session_state.page == "home":
         unsafe_allow_html=True
     )
 
-    # ---------- WEATHER FORECAST ----------
+    # ========== WEATHER FORECAST ==========
     from datetime import datetime, timedelta
+
     CITY = "Manila,PH"
 
     def get_7day_forecast(city):
@@ -775,43 +761,28 @@ elif st.session_state.page == "home":
     forecast = get_7day_forecast(CITY)
 
     if forecast:
-        st.markdown('<div class="weather-section">', unsafe_allow_html=True)
         st.markdown(f"""
             <div class="weather-header">Weather Forecast ({CITY})</div>
+            <div class="weather-scroll">
         """, unsafe_allow_html=True)
 
-        # ✅ Safe user-agent detection (no AttributeError)
-        try:
-            ctx = st.runtime.scriptrunner.get_script_run_ctx()
-            user_agent = getattr(ctx, "browser_user_agent", "")
-        except Exception:
-            user_agent = ""
-
-        if "Mobile" in str(user_agent):
-            cols = st.columns(3, gap="small")
-        else:
-            cols = st.columns(7, gap="small")
-
-        for i, day in enumerate(forecast):
-            with cols[i % len(cols)]:
-                icon_url = f"https://openweathermap.org/img/wn/{day['icon']}@2x.png"
-                st.markdown(f"""
-                    <div class="forecast-box">
-                        <div class="forecast-day">{day['day_short']}</div>
-                        <img class="forecast-icon" src="{icon_url}" alt="Weather"
-                             onerror="this.src='https://cdn-icons-png.flaticon.com/128/1163/1163661.png'">
-                        <div class="forecast-temp">
-                            <span class="temp-high">{day['temp_max']}°</span><br>
-                            <span class="temp-low">{day['temp_min']}°</span>
-                        </div>
+        for day in forecast:
+            icon_url = f"https://openweathermap.org/img/wn/{day['icon']}@2x.png"
+            st.markdown(f"""
+                <div class="forecast-box">
+                    <div class="forecast-day">{day['day_short']}</div>
+                    <img class="forecast-icon" src="{icon_url}" alt="Weather">
+                    <div class="forecast-temp">
+                        <span class="temp-high">{day['temp_max']}°</span><br>
+                        <span class="temp-low">{day['temp_min']}°</span>
                     </div>
-                """, unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+                </div>
+            """, unsafe_allow_html=True)
 
-    # ---------- FEATURE SECTION ----------
-    st.markdown('<div class="features-section">', unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    # ========== FEATURE BUTTONS ==========
     col1, col2 = st.columns(2, gap="medium")
-
     with col1:
         st.markdown("""
         <div class="feature-card">
@@ -835,9 +806,8 @@ elif st.session_state.page == "home":
         if st.button("View", key="history_button", use_container_width=True):
             st.session_state.page = "history"
             st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
 
-    # ---------- TIPS SECTION ----------
+    # ========== TIPS ==========
     st.markdown("""
     <div class="tips-section">
         <div class="tips-title">
@@ -853,6 +823,7 @@ elif st.session_state.page == "home":
     """, unsafe_allow_html=True)
 
     show_bottom_nav('home')
+
 
 
 # ========== OTP VERIFICATION PAGE ==========
