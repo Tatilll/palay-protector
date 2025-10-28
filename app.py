@@ -609,7 +609,7 @@ elif st.session_state.page == "admin_dashboard":
 elif st.session_state.page == "home":
     st.markdown("""
     <style>
-        /* Overall layout */
+        /* --- GENERAL LAYOUT --- */
         .welcome-header {
             text-align: center;
             color: #2e7d32;
@@ -617,84 +617,88 @@ elif st.session_state.page == "home":
             font-weight: bold;
             margin-bottom: 25px;
         }
-        .feature-card {
-            background-color: #A8E6A1;
-            border-radius: 15px;
-            padding: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border-left: 5px solid #4CAF50;
-            height: 180px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-        .features-section {
-            margin: 40px 0;
-        }
 
-        /* 🌦️ Plantix-style Weather */
+        /* --- WEATHER SECTION --- */
         .weather-section {
-            margin-bottom: 40px;
-            text-align: center;
+            margin-bottom: 30px;
         }
         .weather-header {
             font-size: 20px;
             font-weight: 800;
             color: #2e7d32;
             margin-bottom: 10px;
+            text-align: center;
         }
         .weather-sub {
-            font-size: 14px;
+            font-size: 13px;
+            text-align: center;
             color: #555;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
-        .plantix-scroll {
+
+        /* Scrollable forecast row */
+        .forecast-scroll {
             display: flex;
             overflow-x: auto;
-            gap: 14px;
-            padding: 10px 5px;
+            padding: 10px;
+            gap: 12px;
             scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
         }
-        .plantix-card {
-            flex: 0 0 110px;
-            background: #ffffff;
-            border-radius: 16px;
+        .forecast-card {
+            flex: 0 0 90px;
+            background: white;
+            border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             text-align: center;
-            padding: 14px 10px;
+            padding: 10px 6px;
             scroll-snap-align: center;
-            transition: all 0.2s ease-in-out;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .plantix-card:hover {
+        .forecast-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.15);
         }
         .forecast-day {
             color: #2e7d32;
-            font-weight: 700;
-            font-size: 15px;
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 3px;
         }
         .forecast-icon {
-            width: 50px;
-            height: 50px;
-            margin: 8px auto;
+            width: 38px;
+            height: 38px;
+            margin: 4px auto;
         }
-        .temp-high { color: #ff7043; font-weight: bold; font-size: 14px; }
-        .temp-low { color: #42a5f5; font-weight: bold; font-size: 14px; }
+        .forecast-temp {
+            font-size: 12px;
+            color: #555;
+        }
+        .temp-high { color: #ff7043; font-weight: bold; }
+        .temp-low { color: #42a5f5; font-weight: bold; }
 
-        /* Scrollbar design */
-        ::-webkit-scrollbar {
-            height: 6px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #a5d6a7;
-            border-radius: 10px;
+        /* Highlight today's card */
+        .forecast-today {
+            border: 2px solid #4CAF50;
+            box-shadow: 0 0 10px rgba(76,175,80,0.4);
         }
 
-        /* Tips section */
+        /* --- FEATURES --- */
+        .feature-card {
+            background-color: #A8E6A1;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-left: 5px solid #4CAF50;
+            height: 160px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* --- TIPS --- */
         .tips-section {
             background: #f8f9fa;
             border-radius: 12px;
@@ -717,17 +721,20 @@ elif st.session_state.page == "home":
             line-height: 1.5;
         }
 
-        /* Responsive tweaks */
+        /* --- MOBILE OPTIMIZATION --- */
         @media (max-width: 768px) {
+            .forecast-card {
+                flex: 0 0 80px;
+                padding: 8px;
+            }
+            .forecast-icon {
+                width: 32px;
+                height: 32px;
+            }
             .feature-card {
-                height: 150px;
+                height: 140px;
                 padding: 10px;
             }
-            .plantix-card {
-                flex: 0 0 95px;
-                padding: 10px;
-            }
-            .forecast-day { font-size: 13px; }
         }
     </style>
     """, unsafe_allow_html=True)
@@ -743,10 +750,9 @@ elif st.session_state.page == "home":
         unsafe_allow_html=True
     )
 
-    # ===== WEATHER FORECAST =====
+    # ===== WEATHER DATA =====
     from datetime import datetime, timedelta
-
-    CITY = "Manila,PH"
+    CITY = "Manila, PH"
 
     def get_7day_forecast(city):
         today = datetime.now()
@@ -757,7 +763,7 @@ elif st.session_state.page == "home":
             {"max": 30, "min": 25, "icon": "10d"},
             {"max": 32, "min": 26, "icon": "01d"},
             {"max": 31, "min": 25, "icon": "02d"},
-            {"max": 29, "min": 24, "icon": "04d"}
+            {"max": 29, "min": 24, "icon": "04d"},
         ]
         forecast_data = []
         for i in range(7):
@@ -774,29 +780,33 @@ elif st.session_state.page == "home":
 
     if forecast:
         st.markdown(f"""
-            <div class="weather-section">
-                <div class="weather-header">🌦️ 7-Day Forecast ({CITY})</div>
-                <div class="weather-sub">Swipe sideways to view the full week ➡️</div>
-                <div class="plantix-scroll">
+        <div class="weather-section">
+            <div class="weather-header">🌦️ 7-Day Forecast ({CITY})</div>
+            <div class="weather-sub">Swipe → to view more days</div>
+            <div class="forecast-scroll">
         """, unsafe_allow_html=True)
+
+        today_name = datetime.now().strftime("%a")
 
         for day in forecast:
             icon_url = f"https://openweathermap.org/img/wn/{day['icon']}@2x.png"
+            card_class = "forecast-card forecast-today" if day["day_short"] == today_name else "forecast-card"
             st.markdown(f"""
-                <div class='plantix-card'>
-                    <div class='forecast-day'>{day['day_short']}</div>
-                    <img class='forecast-icon' src='{icon_url}' alt='Weather'>
-                    <div><span class='temp-high'>{day['temp_max']}°</span> / 
-                    <span class='temp-low'>{day['temp_min']}°</span></div>
+                <div class="{card_class}">
+                    <div class="forecast-day">{day['day_short']}</div>
+                    <img class="forecast-icon" src="{icon_url}" alt="Weather">
+                    <div class="forecast-temp">
+                        <span class="temp-high">{day['temp_max']}°</span> /
+                        <span class="temp-low">{day['temp_min']}°</span>
+                    </div>
                 </div>
             """, unsafe_allow_html=True)
 
         st.markdown("</div></div>", unsafe_allow_html=True)
 
-    # ===== FEATURE BUTTONS =====
-    st.markdown('<div class="features-section">', unsafe_allow_html=True)
-    col1, col2 = st.columns(2, gap="medium")
-
+    # ===== FEATURES =====
+    st.markdown("### 🌾 Quick Actions")
+    col1, col2 = st.columns(2)
     with col1:
         st.markdown("""
         <div class="feature-card">
@@ -820,9 +830,8 @@ elif st.session_state.page == "home":
         if st.button("View", key="history_button", use_container_width=True):
             st.session_state.page = "history"
             st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
 
-    # ===== TIPS SECTION =====
+    # ===== TIPS =====
     st.markdown("""
     <div class="tips-section">
         <div class="tips-title">
