@@ -609,7 +609,7 @@ elif st.session_state.page == "admin_dashboard":
 elif st.session_state.page == "home":
     st.markdown("""
     <style>
-        /* --- GENERAL LAYOUT --- */
+        /* --- HEADER --- */
         .welcome-header {
             text-align: center;
             color: #2e7d32;
@@ -620,70 +620,69 @@ elif st.session_state.page == "home":
 
         /* --- WEATHER SECTION --- */
         .weather-section {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
         .weather-header {
             font-size: 20px;
             font-weight: 800;
             color: #2e7d32;
-            margin-bottom: 10px;
             text-align: center;
         }
         .weather-sub {
             font-size: 13px;
-            text-align: center;
             color: #555;
+            text-align: center;
             margin-bottom: 10px;
         }
 
-        /* Scrollable forecast row */
-        .forecast-scroll {
+        /* --- SCROLL ANIMATION --- */
+        @keyframes autoScroll {
+            0% { scroll-behavior: smooth; scroll-left: 0; }
+            50% { scroll-behavior: smooth; scroll-left: 250px; }
+            100% { scroll-behavior: smooth; scroll-left: 0; }
+        }
+
+        /* --- WEATHER CARDS --- */
+        .scroll-container {
             display: flex;
             overflow-x: auto;
-            padding: 10px;
-            gap: 12px;
+            overflow-y: hidden;
+            gap: 16px;
+            padding: 12px;
             scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;
+            white-space: nowrap;
+            animation: autoScroll 20s linear infinite;
         }
-        .forecast-card {
-            flex: 0 0 90px;
+        .weather-card {
+            flex: 0 0 auto;
+            width: 120px;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-radius: 15px;
             text-align: center;
-            padding: 10px 6px;
+            padding: 12px 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             scroll-snap-align: center;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .forecast-card:hover {
+        .weather-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 6px 14px rgba(0,0,0,0.15);
         }
-        .forecast-day {
-            color: #2e7d32;
-            font-weight: bold;
-            font-size: 13px;
-            margin-bottom: 3px;
-        }
-        .forecast-icon {
-            width: 38px;
-            height: 38px;
-            margin: 4px auto;
-        }
-        .forecast-temp {
-            font-size: 12px;
-            color: #555;
-        }
-        .temp-high { color: #ff7043; font-weight: bold; }
-        .temp-low { color: #42a5f5; font-weight: bold; }
-
-        /* Highlight today's card */
-        .forecast-today {
+        .today-highlight {
             border: 2px solid #4CAF50;
             box-shadow: 0 0 10px rgba(76,175,80,0.4);
         }
+        .forecast-day {
+            font-weight: 700;
+            color: #2e7d32;
+            font-size: 15px;
+        }
+        .forecast-temp {
+            font-size: 13px;
+        }
 
-        /* --- FEATURES --- */
+        /* --- FEATURES SECTION --- */
         .feature-card {
             background-color: #A8E6A1;
             border-radius: 15px;
@@ -698,7 +697,7 @@ elif st.session_state.page == "home":
             text-align: center;
         }
 
-        /* --- TIPS --- */
+        /* --- TIPS SECTION --- */
         .tips-section {
             background: #f8f9fa;
             border-radius: 12px;
@@ -723,17 +722,12 @@ elif st.session_state.page == "home":
 
         /* --- MOBILE OPTIMIZATION --- */
         @media (max-width: 768px) {
-            .forecast-card {
-                flex: 0 0 80px;
-                padding: 8px;
-            }
-            .forecast-icon {
-                width: 32px;
-                height: 32px;
-            }
             .feature-card {
                 height: 140px;
                 padding: 10px;
+            }
+            .weather-card {
+                width: 100px;
             }
         }
     </style>
@@ -750,8 +744,9 @@ elif st.session_state.page == "home":
         unsafe_allow_html=True
     )
 
-    # ===== WEATHER DATA =====
+    # ===== WEATHER FORECAST =====
     from datetime import datetime, timedelta
+
     CITY = "Manila, PH"
 
     def get_7day_forecast(city):
@@ -780,29 +775,36 @@ elif st.session_state.page == "home":
 
     if forecast:
         st.markdown(f"""
-        <div class="weather-section">
-            <div class="weather-header">🌦️ 7-Day Forecast ({CITY})</div>
-            <div class="weather-sub">Swipe → to view more days</div>
-            <div class="forecast-scroll">
+            <div class="weather-section">
+                <div class="weather-header">🌦️ 7-Day Forecast ({CITY})</div>
+                <div class="weather-sub">Swipe → to view more days</div>
+            </div>
         """, unsafe_allow_html=True)
 
         today_name = datetime.now().strftime("%a")
 
+        weather_html = '<div class="scroll-container">'
         for day in forecast:
             icon_url = f"https://openweathermap.org/img/wn/{day['icon']}@2x.png"
-            card_class = "forecast-card forecast-today" if day["day_short"] == today_name else "forecast-card"
-            st.markdown(f"""
-                <div class="{card_class}">
-                    <div class="forecast-day">{day['day_short']}</div>
-                    <img class="forecast-icon" src="{icon_url}" alt="Weather">
-                    <div class="forecast-temp">
-                        <span class="temp-high">{day['temp_max']}°</span> /
-                        <span class="temp-low">{day['temp_min']}°</span>
-                    </div>
-                </div>
-            """, unsafe_allow_html=True)
+            is_today = day["day_short"] == today_name
+            highlight_class = "weather-card today-highlight" if is_today else "weather-card"
 
-        st.markdown("</div></div>", unsafe_allow_html=True)
+            weather_html += f"""
+            <div class="{highlight_class}">
+                <div class="forecast-day">{day['day_short']}</div>
+                <img src="{icon_url}" width="50" height="50" style="margin:6px auto;">
+                <div class="forecast-temp">
+                    <span style="color:#ff7043;font-weight:bold;">{day['temp_max']}°</span> /
+                    <span style="color:#42a5f5;font-weight:bold;">{day['temp_min']}°</span>
+                </div>
+                <div style="font-size:11px;color:#666;margin-top:4px;">
+                    {'Today 🌞' if is_today else 'Good Weather'}
+                </div>
+            </div>
+            """
+        weather_html += "</div>"
+
+        st.markdown(weather_html, unsafe_allow_html=True)
 
     # ===== FEATURES =====
     st.markdown("### 🌾 Quick Actions")
@@ -847,6 +849,7 @@ elif st.session_state.page == "home":
     """, unsafe_allow_html=True)
 
     show_bottom_nav('home')
+
 
 
 
