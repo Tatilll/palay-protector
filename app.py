@@ -780,9 +780,14 @@ elif st.session_state.page == "home":
             <div class="weather-header">Weather Forecast ({CITY})</div>
         """, unsafe_allow_html=True)
 
-        # Responsive number of columns (3 on mobile, 7 on desktop)
-        user_agent = st.runtime.scriptrunner.get_script_run_ctx().browser_user_agent
-        if user_agent and "Mobile" in user_agent:
+        # ✅ Safe user-agent detection (no AttributeError)
+        try:
+            ctx = st.runtime.scriptrunner.get_script_run_ctx()
+            user_agent = getattr(ctx, "browser_user_agent", "")
+        except Exception:
+            user_agent = ""
+
+        if "Mobile" in str(user_agent):
             cols = st.columns(3, gap="small")
         else:
             cols = st.columns(7, gap="small")
@@ -848,6 +853,7 @@ elif st.session_state.page == "home":
     """, unsafe_allow_html=True)
 
     show_bottom_nav('home')
+
 
 # ========== OTP VERIFICATION PAGE ==========
 elif st.session_state.page == "otp_verification":
