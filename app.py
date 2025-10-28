@@ -630,9 +630,11 @@ elif st.session_state.page == "home":
             align-items: center;
             text-align: center;
         }
-        .features-section { margin: 40px 0; }
+        .features-section {
+            margin: 40px 0;
+        }
 
-        /* 🌤 Plantix-style weather */
+        /* 🌦️ Plantix-style Weather */
         .weather-section {
             margin-bottom: 40px;
             text-align: center;
@@ -641,14 +643,12 @@ elif st.session_state.page == "home":
             font-size: 20px;
             font-weight: 800;
             color: #2e7d32;
-            margin-bottom: 15px;
-            text-align: center;
+            margin-bottom: 10px;
         }
         .weather-sub {
             font-size: 14px;
             color: #555;
             margin-bottom: 8px;
-            text-align: center;
         }
         .plantix-scroll {
             display: flex;
@@ -684,6 +684,8 @@ elif st.session_state.page == "home":
         }
         .temp-high { color: #ff7043; font-weight: bold; font-size: 14px; }
         .temp-low { color: #42a5f5; font-weight: bold; font-size: 14px; }
+
+        /* Scrollbar design */
         ::-webkit-scrollbar {
             height: 6px;
         }
@@ -772,10 +774,10 @@ elif st.session_state.page == "home":
 
     if forecast:
         st.markdown(f"""
-        <div class="weather-section">
-            <div class="weather-header">🌦️ Weather Forecast ({CITY})</div>
-            <div class="weather-sub">7-day forecast with Plantix-inspired style</div>
-            <div class="plantix-scroll">
+            <div class="weather-section">
+                <div class="weather-header">🌦️ 7-Day Forecast ({CITY})</div>
+                <div class="weather-sub">Swipe sideways to view the full week ➡️</div>
+                <div class="plantix-scroll">
         """, unsafe_allow_html=True)
 
         for day in forecast:
@@ -784,7 +786,8 @@ elif st.session_state.page == "home":
                 <div class='plantix-card'>
                     <div class='forecast-day'>{day['day_short']}</div>
                     <img class='forecast-icon' src='{icon_url}' alt='Weather'>
-                    <div><span class='temp-high'>{day['temp_max']}°</span> / <span class='temp-low'>{day['temp_min']}°</span></div>
+                    <div><span class='temp-high'>{day['temp_max']}°</span> / 
+                    <span class='temp-low'>{day['temp_min']}°</span></div>
                 </div>
             """, unsafe_allow_html=True)
 
@@ -835,6 +838,7 @@ elif st.session_state.page == "home":
     """, unsafe_allow_html=True)
 
     show_bottom_nav('home')
+
 
 
 
