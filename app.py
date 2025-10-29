@@ -605,13 +605,12 @@ elif st.session_state.page == "admin_dashboard":
         st.session_state.page = "login"
         st.rerun()
 
+
 # ========== HOME SCREEN ==========
 elif st.session_state.page == "home":
     st.markdown("""
     <style>
-        body {
-            overflow-x: hidden;
-        }
+        /* Overall layout */
         .welcome-header {
             text-align: center;
             color: #2e7d32;
@@ -619,81 +618,144 @@ elif st.session_state.page == "home":
             font-weight: bold;
             margin-bottom: 25px;
         }
+        .feature-card {
+            background-color: #A8E6A1;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-left: 5px solid #4CAF50;
+            height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .features-section { margin: 40px 0; }
+
+        /* 🌤 Plantix-style weather */
+        .weather-section {
+            margin-bottom: 40px;
+            text-align: center;
+        }
         .weather-header {
             font-size: 20px;
-            font-weight: bold;
+            font-weight: 800;
             color: #2e7d32;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .weather-sub {
+            font-size: 14px;
+            color: #555;
             margin-bottom: 8px;
             text-align: center;
         }
-        .subtext {
-            text-align: center;
-            color: #aaa;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        .forecast-container {
+
+        /* ✅ Horizontal scroll fix */
+        .plantix-scroll {
             display: flex;
-            flex-direction: row;
-            gap: 15px;
+            flex-wrap: nowrap;
             overflow-x: auto;
-            padding: 15px 10px;
-            scrollbar-width: thin;
-            scrollbar-color: #4CAF50 #1b1b1b;
+            overflow-y: hidden;
+            gap: 10px;
+            padding: 10px 5px;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
         }
-        .forecast-container::-webkit-scrollbar {
-            height: 8px;
+        .plantix-scroll::-webkit-scrollbar {
+            height: 6px;
         }
-        .forecast-container::-webkit-scrollbar-thumb {
-            background: #4CAF50;
-            border-radius: 4px;
+        .plantix-scroll::-webkit-scrollbar-thumb {
+            background-color: #a5d6a7;
+            border-radius: 10px;
         }
-        .forecast-box {
+
+        .plantix-card {
             flex: 0 0 auto;
-            background: white;
-            border-radius: 18px;
-            padding: 12px;
+            width: 95px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             text-align: center;
-            width: 90px;
-            min-width: 90px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            padding: 8px 4px;
+            transition: all 0.2s ease-in-out;
         }
-        .forecast-box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+        .plantix-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
         .forecast-day {
-            color: #1b5e20;
-            font-weight: bold;
-            margin-bottom: 6px;
+            color: #2e7d32;
+            font-weight: 600;
+            font-size: 13px;
         }
         .forecast-icon {
-            width: 45px;
-            height: 45px;
-            margin-bottom: 8px;
+            width: 35px;
+            height: 35px;
+            margin: 6px auto;
         }
-        .temp-high {
-            color: #ff7043;
+        .temp-high { color: #ff7043; font-weight: bold; font-size: 12px; }
+        .temp-low { color: #42a5f5; font-weight: bold; font-size: 12px; }
+
+        /* Tips section */
+        .tips-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #4CAF50;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .tips-title {
+            font-size: 18px;
             font-weight: bold;
-            font-size: 14px;
+            color: #2e7d32;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
         }
-        .temp-low {
-            color: #42a5f5;
-            font-size: 13px;
+        .tips-text {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 768px) {
+            .feature-card {
+                height: 150px;
+                padding: 10px;
+            }
+            .plantix-card {
+                width: 80px;
+                padding: 6px 3px;
+            }
+            .forecast-day { font-size: 11px; }
+            .temp-high, .temp-low { font-size: 10px; }
+            .forecast-icon {
+                width: 30px;
+                height: 30px;
+            }
         }
     </style>
     """, unsafe_allow_html=True)
 
+    # ===== HEADER =====
     st.markdown(
         f"""<div class="welcome-header">
-            Welcome back, <span style="color:#4CAF50;">{st.session_state.logged_user}</span>!
-            <div style="font-size:15px;color:#6c757d;">Ready to protect your palay today?</div>
-        </div>""", unsafe_allow_html=True
+            Welcome back, <span style="color: #4CAF50;">{st.session_state.logged_user}</span>!
+            <div style="font-size: 15px; color: #6c757d; margin-top: 4px;">
+                Ready to protect your palay today?
+            </div>
+        </div>""",
+        unsafe_allow_html=True
     )
 
+    # ===== WEATHER FORECAST =====
     from datetime import datetime, timedelta
-    CITY = "Manila, PH"
+
+    CITY = "Manila,PH"
 
     def get_7day_forecast(city):
         today = datetime.now()
@@ -721,23 +783,70 @@ elif st.session_state.page == "home":
 
     if forecast:
         st.markdown(f"""
-            <div class="weather-header">🌦️ 7-Day Forecast ({CITY})</div>
-            <div class="subtext">Swipe ➜ to view more days</div>
-            <div class="forecast-container">
+        <div class="weather-section">
+            <div class="weather-header">🌦️ 7-Day Weather Forecast ({CITY})</div>
+            <div class="weather-sub">Swipe left or right ➜</div>
+            <div class="plantix-scroll">
         """, unsafe_allow_html=True)
+
         for day in forecast:
             icon_url = f"https://openweathermap.org/img/wn/{day['icon']}@2x.png"
             st.markdown(f"""
-                <div class="forecast-box">
-                    <div class="forecast-day">{day['day_short']}</div>
-                    <img src="{icon_url}" class="forecast-icon">
-                    <div><span class="temp-high">{day['temp_max']}°</span> 
-                    <span class="temp-low">{day['temp_min']}°</span></div>
+                <div class='plantix-card'>
+                    <div class='forecast-day'>{day['day_short']}</div>
+                    <img class='forecast-icon' src='{icon_url}' alt='Weather'>
+                    <div><span class='temp-high'>{day['temp_max']}°</span> / 
+                         <span class='temp-low'>{day['temp_min']}°</span></div>
                 </div>
             """, unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
 
+        st.markdown("</div></div>", unsafe_allow_html=True)
 
+    # ===== FEATURE BUTTONS =====
+    st.markdown('<div class="features-section">', unsafe_allow_html=True)
+    col1, col2 = st.columns(2, gap="medium")
+
+    with col1:
+        st.markdown("""
+        <div class="feature-card">
+            <img src="https://cdn-icons-png.flaticon.com/128/1150/1150652.png" width="70">
+            <div style="font-weight: bold; margin: 8px 0;">Detect Disease</div>
+            <div style="font-size: 13px;">Upload images of palay plants</div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("Detect", key="detect_button", use_container_width=True):
+            st.session_state.page = "detect"
+            st.rerun()
+
+    with col2:
+        st.markdown("""
+        <div class="feature-card">
+            <img src="https://cdn-icons-png.flaticon.com/128/12901/12901923.png" width="70">
+            <div style="font-weight: bold; margin: 8px 0;">View History</div>
+            <div style="font-size: 13px;">Check your previous scans</div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("View", key="history_button", use_container_width=True):
+            st.session_state.page = "history"
+            st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # ===== TIPS SECTION =====
+    st.markdown("""
+    <div class="tips-section">
+        <div class="tips-title">
+            <img src="https://cdn-icons-png.flaticon.com/128/1598/1598424.png" 
+                 width="24" height="24" style="vertical-align: middle; margin-right: 8px;">
+            Did You Know?
+        </div>
+        <div class="tips-text">
+            Early detection of palay diseases can increase your yield by up to 30%.<br>
+            Upload images weekly for best results.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    show_bottom_nav('home')
 
 
 
